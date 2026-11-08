@@ -1,0 +1,59 @@
+REPLICANT - installing in FL Studio (Windows)
+=============================================
+
+1. Copy the whole "Replicant.vst3" folder into:
+       C:\Program Files\Common Files\VST3\
+   (Windows will ask for administrator permission - click Continue.)
+
+2. In FL Studio: Options > Manage plugins > Find installed plugins.
+   Tick the star next to "Replicant" so it shows in your plugin lists.
+
+3. Add it to a project: Channel rack > + > Replicant.
+
+"Replicant.exe" is a standalone version you can run without FL Studio
+(choose your audio and MIDI devices with the Options button).
+
+Sounds
+------
+* The coloured buttons above the ribbon are the CS-80's 22 preset voices.
+* FILM SCORE SOUNDS opens 20 more in the style of its famous soundtracks.
+* Click the green ESPER screen for the full list, or use < >.
+  All 42 also appear in FL Studio's own preset menu for the plugin.
+* MEMORY 1-4: press STORE, then a number, to keep the current panel.
+  Press a number to recall it. Memories are saved with your FL project.
+* SAVE / LOAD store sound files (.rpl) in Documents\Replicant Sounds.
+
+Playing it like a CS-80
+-----------------------
+* Aftertouch is half the instrument. Most sounds respond to it with
+  brightness, swell or vibrato, and polyphonic aftertouch works per note.
+  No aftertouch on your keyboard? SETUP > MOD WHEEL > PRESSURE turns the
+  mod wheel into aftertouch.
+* RIBBON (the strip above the keys): click, then slide left or right to
+  bend. It springs back when you let go. SETUP sets its range.
+* MIDI it responds to: notes, velocity, polyphonic and channel
+  aftertouch, pitch wheel, mod wheel (CC1), sustain (CC64), and MPE
+  (switch it on in SETUP).
+
+Quick tour
+----------
+CHANNEL I / II  Two complete synths per voice: FEET, VCO (saw/square,
+                PW, PWM, noise), VCF (high-pass then low-pass), the
+                IL-AL-A-D-R filter envelope, VCA with sine, touch response.
+SUB OSC         The LFO, to VCO / VCF / VCA.
+RING MOD        Ring modulator with its own attack/decay sweep.
+TOUCH           Initial pitch bend, and aftertouch to pitch/vibrato/speed.
+OVERALL         Global brilliance and resonance.
+KEYBOARD        Brightness and level scaling for the low / high keys.
+DELAY / HALL    Echo and a big hall reverb.
+AGE             How "analog" the voices are: tolerances and drift.
+
+Hover over any control to see its exact value on the ESPER screen.
+Double-click a control to reset it. Drag the window corner to resize.
+
+Fonts: Michroma, Share Tech Mono, Sorts Mill Goudy - SIL Open Font
+License (see the OFL-*.txt files).
+
+Replicant is a non-commercial tribute by APT Industrial. Yamaha and
+CS-80 are trademarks of their respective owners; this project is not
+affiliated with them.

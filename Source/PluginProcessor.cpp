@@ -90,6 +90,7 @@ void ReplicantProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     masterSm.reset (sampleRate, 0.03);
     masterSm.setCurrentAndTargetValue (rMaster());
     keyboardState.reset();
+    hostStop.prepare (sampleRate);
     setLatencySamples (juce::roundToInt (oversampling.getLatencyInSamples()));
 }
 
@@ -106,6 +107,7 @@ void ReplicantProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     const int numCh = buffer.getNumChannels();
     buffer.clear();
 
+    hostStop.beginBlock (getPlayHead(), midi);
     keyboardState.processNextMidiBuffer (midi, 0, numSamples, true);
 
     buildPatch (patch);
@@ -204,6 +206,20 @@ void ReplicantProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     outputPeak.store (juce::jmax (peak, outputPeak.load() * 0.85f), std::memory_order_relaxed);
     ringEnv.store (synth.ringEnvValue(), std::memory_order_relaxed);
     subOsc.store (synth.subValue(), std::memory_order_relaxed);
+
+    hostStop.endBlock (buffer, [this] { panic(); });
+}
+
+// Runs on the audio thread once the stop fade has reached silence.
+void ReplicantProcessor::panic()
+{
+    synth.setSustain (false);
+    synth.allNotesOff (true);
+    oversampling.reset();
+    chorus.reset();
+    delay.reset();
+    hall.reset();
+    dcL = dcR = dcInL = dcInR = 0.0f;
 }
 
 // ---------------------------------------------------------------------------
@@ -298,6 +314,7 @@ void ReplicantProcessor::getStateInformation (juce::MemoryBlock& destData)
 
 void ReplicantProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+    hostStop.requestStop();   // a project/state load starts from silence
     if (auto xml = getXmlFromBinary (data, sizeInBytes))
         if (xml->hasTagName (apvts.state.getType()))
         {

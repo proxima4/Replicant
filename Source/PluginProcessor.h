@@ -5,6 +5,7 @@
 #include "Params.h"
 #include "dsp/Synth.h"
 #include "dsp/Effects.h"
+#include "HostStop.h"
 
 class ReplicantProcessor : public juce::AudioProcessor
 {
@@ -14,6 +15,7 @@ public:
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override {}
+    void reset() override { hostStop.requestStop(); }
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;
@@ -69,6 +71,8 @@ public:
     std::atomic<int> scopeWrite { 0 };
 
 private:
+    HostStop hostStop;   // FL Studio Stop = silence (see HostStop.h)
+    void panic();
     void buildPatch (rep::Patch& p);
     void cacheParams();
     void applyState (const juce::ValueTree& vt);

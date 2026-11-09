@@ -213,7 +213,7 @@ void ReplicantProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
 // Runs on the audio thread once the stop fade has reached silence.
 void ReplicantProcessor::panic()
 {
-    synth.setSustain (false);
+    synth.handleMidi (juce::MidiMessage::controllerEvent (1, 64, 0));   // sustain pedal up
     synth.allNotesOff (true);
     oversampling.reset();
     chorus.reset();

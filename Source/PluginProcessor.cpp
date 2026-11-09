@@ -110,6 +110,13 @@ void ReplicantProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     hostStop.beginBlock (getPlayHead(), midi);
     keyboardState.processNextMidiBuffer (midi, 0, numSamples, true);
 
+    // Zero-length call (FL Studio sends these): no audio to make, but notes must still be handled.
+    if (numSamples == 0)
+    {
+        for (const auto m : midi) synth.handleMidi (m.getMessage());
+        return;
+    }
+
     buildPatch (patch);
     synth.setPatch (patch);
     synth.setRibbon (rRibbon());
@@ -150,7 +157,8 @@ void ReplicantProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         for (auto it = midi.findNextSamplePosition (chunkStart); it != midi.cend(); ++it)
         {
             const auto meta = *it;
-            if (meta.samplePosition >= chunkStart + len) break;
+            // events stamped at/after the block end (FL Studio does this) play in the last piece
+            if (meta.samplePosition >= chunkStart + len && chunkStart + len < numSamples) break;
             const int rel = juce::jlimit (0, len, meta.samplePosition - chunkStart);
             if (rel > pos) { synth.render (L + 2 * pos, R + 2 * pos, 2 * (rel - pos)); pos = rel; }
             synth.handleMidi (meta.getMessage());

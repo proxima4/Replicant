@@ -1,4 +1,5 @@
 #pragma once
+#include "AptVersion.h"
 #include <juce_audio_utils/juce_audio_utils.h>
 #include "PluginProcessor.h"
 #include "ui/NeonLookAndFeel.h"
@@ -19,6 +20,7 @@ public:
 private:
     ReplicantProcessor& proc;
     NeonLookAndFeel lnf;
+    apt::VersionUI versionUi;   // version badge + history (Source/AptVersion.h)
     Ctx ctx;
     std::vector<Section> sections;
     juce::Image backdrop;

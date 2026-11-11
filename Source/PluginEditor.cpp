@@ -68,6 +68,14 @@ Root::Root (ReplicantProcessor& p)
     updatePatchLabel();
     timerCallback();
     startTimerHz (30);
+    {
+        apt::VersionStyle vs;
+        vs.veil = juce::Colour (0xc004060a); vs.panel = col::glass; vs.page = col::crtBg; vs.edge = col::cyan.withAlpha (0.6f);
+        vs.text = col::phosphor; vs.dim = col::phosDim; vs.accent = col::cyan;
+        vs.titleFont = lnf.wide (22.0f); vs.bodyFont = lnf.mono (17.0f); vs.badgeFont = lnf.mono (14.0f);
+        vs.productName = "Replicant";
+        versionUi.attach (*this, vs, { 362, 79, 64, 18 });
+    }
 }
 
 Root::~Root()

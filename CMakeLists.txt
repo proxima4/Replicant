@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(Replicant VERSION 1.0.3 LANGUAGES C CXX)
+project(Replicant VERSION 1.0.4 LANGUAGES C CXX)
+
+add_compile_definitions(APT_VERSION="${PROJECT_VERSION}")   # shown on the version badge
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -95,3 +97,13 @@ if(REP_BUILD_TESTS)
     target_link_libraries(RepUiSnapshot PRIVATE ReplicantData
         juce::juce_audio_utils juce::juce_dsp juce::juce_recommended_config_flags)
 endif()
+
+# ---- Version history shown inside the plugin (CHANGELOG.md, see Source/AptVersion.h) ----
+juce_add_binary_data(ReplicantVersionHistory HEADER_NAME VersionHistoryData.h NAMESPACE VersionHistoryData SOURCES CHANGELOG.md)
+get_property(_apt_targets DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
+foreach(_apt_t IN LISTS _apt_targets)
+    get_target_property(_apt_src ${_apt_t} SOURCES)
+    if(_apt_src AND "${_apt_src}" MATCHES "PluginEditor\\.cpp")
+        target_link_libraries(${_apt_t} PRIVATE ReplicantVersionHistory)
+    endif()
+endforeach()
